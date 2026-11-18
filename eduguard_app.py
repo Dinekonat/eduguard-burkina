@@ -144,7 +144,7 @@ with col_carte:
             size_max=45,
             zoom=5.2,
             center={'lat': 12.3, 'lon': -1.6},
-            mapbox_style='carto-positron',
+            mapbox_style='open-street-map',
             title='Indice de vulnérabilité au décrochage (2024-25)',
             labels={'NIVEAU_RISQUE': 'Niveau de risque'}
         )
