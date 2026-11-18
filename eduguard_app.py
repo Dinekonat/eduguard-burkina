@@ -126,30 +126,63 @@ with col_carte:
 
     if not df_indice.empty:
         df_map = df_indice.copy()
-        df_map['couleur'] = df_map['NIVEAU_RISQUE'].map(COULEURS_RISQUE)
-        df_map['taille']  = df_map['INDICE_VULNERABILITE'] * 60 + 10
-
-        fig_map = px.scatter_mapbox(
-            df_map,
-            lat='LAT', lon='LON',
-            size='INDICE_VULNERABILITE',
-            color='NIVEAU_RISQUE',
-            color_discrete_map=COULEURS_RISQUE,
-            hover_name='REGION',
-            hover_data={
-                'INDICE_VULNERABILITE': ':.3f',
-                'RANG': True,
-                'LAT': False, 'LON': False
-            },
-            size_max=45,
-            zoom=5.2,
-            center={'lat': 12.3, 'lon': -1.6},
-            mapbox_style='open-street-map',
-            title='Indice de vulnérabilité au décrochage (2024-25)',
-            labels={'NIVEAU_RISQUE': 'Niveau de risque'}
+        df_map['LAT'] = df_map['REGION'].map(lambda r: COORDS.get(r, (12, -1.5))[0])
+        df_map['LON'] = df_map['REGION'].map(lambda r: COORDS.get(r, (12, -1.5))[1])
+        df_map['Abandon_pct'] = (df_map['INDICE_VULNERABILITE'] * 100).round(1)
+        df_map['Risque_label'] = df_map['NIVEAU_RISQUE'].map(
+            {'Élevé': '🔴 Élevé', 'Modéré': '🟠 Modéré', 'Faible': '🟢 Faible'}
         )
-        fig_map.update_layout(height=430, margin=dict(l=0, r=0, t=40, b=0),
-                              legend=dict(title='Niveau de risque'))
+
+        fig_map = go.Figure()
+
+        for niveau, couleur in [('Élevé', '#d62728'), ('Modéré', '#ff7f0e'), ('Faible', '#2ca02c')]:
+            df_n = df_map[df_map['NIVEAU_RISQUE'] == niveau]
+            if df_n.empty:
+                continue
+            fig_map.add_trace(go.Scattergeo(
+                lat=df_n['LAT'],
+                lon=df_n['LON'],
+                mode='markers+text',
+                marker=dict(
+                    size=df_n['INDICE_VULNERABILITE'] * 50 + 12,
+                    color=couleur,
+                    opacity=0.85,
+                    line=dict(width=1, color='white')
+                ),
+                text=df_n['REGION'].str.replace(' ', '<br>'),
+                textposition='top center',
+                textfont=dict(size=9, color='black'),
+                name=f'{niveau}',
+                hovertemplate=(
+                    '<b>%{customdata[0]}</b><br>'
+                    'Indice : %{customdata[1]:.3f}<br>'
+                    'Rang : #%{customdata[2]}<br>'
+                    'Risque : %{customdata[3]}<extra></extra>'
+                ),
+                customdata=df_n[['REGION', 'INDICE_VULNERABILITE', 'RANG', 'NIVEAU_RISQUE']].values
+            ))
+
+        fig_map.update_layout(
+            title='Carte des risques de décrochage scolaire — Burkina Faso (2024-25)',
+            height=430,
+            margin=dict(l=0, r=0, t=40, b=0),
+            legend=dict(title='Niveau de risque', x=0.01, y=0.99),
+            geo=dict(
+                scope='africa',
+                center=dict(lat=12.3, lon=-1.6),
+                projection_scale=12,
+                showland=True,
+                landcolor='#f0ede4',
+                showocean=True,
+                oceancolor='#cde',
+                showcountries=True,
+                countrycolor='#aaa',
+                showcoastlines=True,
+                coastlinecolor='#aaa',
+                showlakes=False,
+                bgcolor='#f8f9fa',
+            )
+        )
         st.plotly_chart(fig_map, use_container_width=True)
     else:
         st.info("Aucune donnée disponible pour les régions sélectionnées.")
