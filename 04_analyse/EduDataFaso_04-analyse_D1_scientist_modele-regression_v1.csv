@@ -1,0 +1,2 @@
+﻿Modele,Variable_cible,Predicteurs,R2,MAE_pct,Interpretation
+Régression linéaire multiple,TAUX_ABANDON,"TAP_total, TBS_total, IPS_TAP, NB_ECOLES",1.0,0.0,Le modèle explique 100.0% de la variance du taux d abandon. MAE=0.0%.

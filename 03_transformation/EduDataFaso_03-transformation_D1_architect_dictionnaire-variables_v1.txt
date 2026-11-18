@@ -1,0 +1,200 @@
+================================================================================
+DICTIONNAIRE DES VARIABLES — Dataset Maître EduGuard
+Équipe : EduData Faso | Défi 1 | Data Challenge Burkina 2026
+Rôle : Data Architect
+« On ne développe pas, on se développe » — Joseph Ki-Zerbo
+================================================================================
+
+FICHIER DÉCRIT : EduDataFaso_03-transformation_D1_engineer_dataset-complet_v1.csv
+FORMAT        : CSV, encodage UTF-8-BOM, séparateur virgule
+DIMENSIONS    : 130 lignes × 22 colonnes (13 régions × 10 années scolaires)
+PÉRIODE       : 2015-16 à 2024-25
+COUVERTURE    : 13 régions administratives historiques du Burkina Faso
+SOURCE ORIGINE: DGESS, Ministère de l'Éducation Nationale et de l'Alphabétisation
+
+================================================================================
+VARIABLES D'IDENTIFICATION
+================================================================================
+
+Variable        | Type   | Modalités / Plage       | Description
+----------------|--------|-------------------------|----------------------------
+REGION          | Texte  | 13 valeurs distinctes   | Nom de la région administrative.
+                |        |                         | Valeurs : BOUCLE DU MOUHOUN,
+                |        |                         | CASCADES, CENTRE, CENTRE-EST,
+                |        |                         | CENTRE-NORD, CENTRE-OUEST,
+                |        |                         | CENTRE-SUD, EST, HAUTS-BASSINS,
+                |        |                         | NORD, PLATEAU CENTRAL,
+                |        |                         | SAHEL, SUD-OUEST.
+                |        |                         | ATTENTION : Utilise les 13 anciennes
+                |        |                         | régions (pas les 17 nouvelles).
+----------------|--------|-------------------------|----------------------------
+ANNEE           | Texte  | 2015-16 à 2024-25       | Année scolaire au format AAAA-AA.
+                |        |                         | Ex : 2022-23 = rentrée sept. 2022.
+
+================================================================================
+INDICATEURS DE SCOLARISATION
+================================================================================
+
+Variable        | Type   | Unité   | Description
+----------------|--------|---------|---------------------------------------------
+TAP_total       | Réel   | %       | Taux d'Achèvement du Primaire, total.
+                |        |         | = Nb élèves atteignant la dernière année du
+                |        |         |   primaire / population d'âge théorique.
+                |        |         | Un TAP bas signale un fort décrochage.
+                |        |         | Plage observée : 11% (Sahel 2022-23)
+                |        |         |                 à ~100% (Centre 2016-17).
+----------------|--------|---------|---------------------------------------------
+TAP_garcons     | Réel   | %       | TAP pour les garçons uniquement.
+TAP_filles      | Réel   | %       | TAP pour les filles uniquement.
+----------------|--------|---------|---------------------------------------------
+TBS_total       | Réel   | %       | Taux Brut de Scolarisation, total.
+                |        |         | = Nb total d'élèves inscrits / population
+                |        |         |   d'âge scolaire théorique (6-11 ans).
+                |        |         | Peut dépasser 100% (sur-âge).
+----------------|--------|---------|---------------------------------------------
+TBS_garcons     | Réel   | %       | TBS pour les garçons.
+TBS_filles      | Réel   | %       | TBS pour les filles.
+----------------|--------|---------|---------------------------------------------
+TBA_total       | Réel   | %       | Taux Brut d'Admission en CP1 (1ère année).
+                |        |         | = Nb nouveaux inscrits en CP1 /
+                |        |         |   population d'âge 6 ans.
+                |        |         | Indicateur d'accès à l'entrée du primaire.
+
+================================================================================
+INDICATEURS DE PARITÉ
+================================================================================
+
+Variable        | Type   | Unité   | Description
+----------------|--------|---------|---------------------------------------------
+IPS_TAP         | Réel   | Ratio   | Indice de Parité des Sexes sur le TAP.
+                |        |         | = TAP_filles / TAP_garcons.
+                |        |         | IPS = 1 → parité parfaite.
+                |        |         | IPS < 1 → désavantage pour les filles.
+                |        |         | IPS > 1 → désavantage pour les garçons.
+----------------|--------|---------|---------------------------------------------
+IPS_TBS         | Réel   | Ratio   | Indice de Parité des Sexes sur le TBS.
+                |        |         | Même lecture que IPS_TAP.
+----------------|--------|---------|---------------------------------------------
+ECART_PARITE_TAP| Réel   | Ratio   | = IPS_TAP - 1. Facilite la lecture :
+                |        |         | valeur positive = avantage filles,
+                |        |         | valeur négative = avantage garçons.
+
+================================================================================
+INDICATEURS D'EFFECTIFS ET D'INFRASTRUCTURES
+================================================================================
+
+Variable        | Type   | Unité        | Description
+----------------|--------|--------------|----------------------------------------
+CP1_total       | Entier | Nb élèves    | Nombre de nouveaux inscrits en CP1.
+                |        |              | Indicateur du flux d'entrée dans
+                |        |              | le primaire.
+----------------|--------|--------------|----------------------------------------
+EFFECTIFS_total | Entier | Nb élèves    | Effectif total d'élèves du primaire
+                |        |              | (toutes classes confondues).
+----------------|--------|--------------|----------------------------------------
+NB_ECOLES       | Entier | Nb écoles    | Nombre d'établissements primaires
+                |        |              | (publics + privés + communautaires).
+                |        |              | ATTENTION : valeurs manquantes pour
+                |        |              | 22 observations (données DGESS
+                |        |              | non disponibles pour certaines années).
+----------------|--------|--------------|----------------------------------------
+CEP_total       | Réel   | %            | Taux de réussite au Certificat
+                |        |              | d'Études Primaires (CEP).
+                |        |              | Examen de fin de cycle primaire.
+                |        |              | ATTENTION : 10 valeurs manquantes.
+
+================================================================================
+INDICATEURS CALCULÉS (étape transformation)
+================================================================================
+
+Variable        | Type   | Unité   | Formule / Description
+----------------|--------|---------|---------------------------------------------
+TAUX_ABANDON    | Réel   | %       | = 100 - TAP_total.
+                |        |         | Proportion estimée d'élèves n'atteignant
+                |        |         | pas la fin du primaire.
+                |        |         | NB : approximation. Ne distingue pas
+                |        |         | abandon, redoublement et migration.
+----------------|--------|---------|---------------------------------------------
+TAP_variation   | Réel   | pts %   | = TAP_total (année N) - TAP_total (N-1).
+                |        |         | Variation annuelle du TAP.
+                |        |         | Manquant pour l'année 2015-16
+                |        |         | (pas d'année antérieure disponible).
+----------------|--------|---------|---------------------------------------------
+TAP_tendance    | Réel   | pts %/an| Tendance linéaire du TAP sur 2015-2025.
+                |        |         | Calculée par régression linéaire.
+                |        |         | Valeur positive → progression générale.
+                |        |         | Valeur négative → dégradation générale.
+
+================================================================================
+INDICE COMPOSITE DE VULNÉRABILITÉ (étape transformation)
+================================================================================
+
+Variable             | Type  | Plage   | Description
+---------------------|-------|---------|------------------------------------------
+INDICE_VULNERABILITE | Réel  | 0 à 1   | Indice composite de risque de décrochage.
+                     |       |         | Formule :
+                     |       |         |   0.40 × score_TAP
+                     |       |         | + 0.25 × score_TBS
+                     |       |         | + 0.20 × score_tendance
+                     |       |         | + 0.15 × score_IPS
+                     |       |         |
+                     |       |         | Chaque score est normalisé 0-1 (inverse :
+                     |       |         | TAP bas → score élevé → risque élevé).
+                     |       |         |
+                     |       |         | Valeur proche de 1 = vulnérabilité max.
+                     |       |         | Valeur proche de 0 = vulnérabilité min.
+---------------------|-------|---------|------------------------------------------
+NIVEAU_RISQUE        | Texte | 3 niv.  | Classification issue de l'indice :
+                     |       |         | ≥ 0.60 → Élevé (🔴)
+                     |       |         | 0.35 à 0.60 → Modéré (🟡)
+                     |       |         | < 0.35 → Faible (🟢)
+---------------------|-------|---------|------------------------------------------
+RANG                 | Entier| 1 à 13  | Classement par indice décroissant.
+                     |       |         | RANG 1 = région la plus vulnérable.
+
+================================================================================
+PLAN DU PARCOURS DES DONNÉES (rôle Data Architect)
+================================================================================
+
+SOURCE BRUTE (Excel)
+  └─► 01_collecte/   → Export de chaque feuille en CSV individuel
+                        14 fichiers CSV + 1 LISEZ-MOI
+                        Rôle : Data Engineer
+  └─► 02_nettoyage/  → Nettoyage (doublons, valeurs manquantes, noms régions)
+                        14 fichiers CSV propres + 1 journal
+                        Rôle : Data Engineer
+  └─► 03_transformation/ → Fusion + calcul des indicateurs + indice
+                        3 fichiers CSV (dataset-maitre, dataset-complet, indice)
+                        + ce dictionnaire des variables
+                        Rôles : Data Engineer + Data Analyst + Data Architect
+  └─► 04_analyse/    → Statistiques, clustering K-Means, régression, prévisions
+                        6 fichiers CSV + 1 rapport TXT
+                        Rôle : Data Scientist + Data Analyst
+  └─► 05_interpretation/ → Dashboard Streamlit (carte, graphiques, alertes)
+                        LISEZ-MOI + lien vers l'application déployée
+                        Rôle : Data Analyst
+
+================================================================================
+NOTES IMPORTANTES
+================================================================================
+
+1. TRAÇABILITÉ : Une note cachée a été intégrée par les organisateurs dans
+   les données sources (en-tête de colonne Feuil1, année 2018-19).
+   Citation requise : « On ne développe pas, on se développe » — Joseph Ki-Zerbo.
+   Présente dans tous les scripts, la documentation et le dashboard.
+
+2. RÉGIONS : Ce dataset utilise les 13 anciennes régions administratives du
+   Burkina Faso. Ne pas confondre avec les 17 nouvelles régions (découpage 2019+).
+
+3. CRISE 2022-23 : Une chute brutale du TAP est observée dans plusieurs régions
+   (notamment Sahel, Est, Nord) en 2022-23. Probable effet de la crise
+   sécuritaire (fermetures d'écoles, déplacements de populations).
+
+4. IA DÉCLARÉE : Python et l'IA (Antigravity/Gemini) ont assisté la production
+   de ce travail. Tout usage est déclaré dans la documentation (Section 7).
+
+================================================================================
+Produit le : 18 novembre 2026
+Équipe     : EduData Faso — EduDataFaso@challenge.bf
+Défi       : Défi 1 — Cartographie et anticipation du risque de décrochage
+================================================================================

@@ -1,0 +1,168 @@
+
+================================================================================
+RAPPORT D'ANALYSE — EduGuard
+Équipe : EduData Faso | Défi 1 | Data Challenge Burkina 2026
+« On ne développe pas, on se développe » — Joseph Ki-Zerbo
+================================================================================
+
+CONTEXTE
+--------
+Ce rapport présente les résultats de l'analyse statistique et prédictive menée
+sur les données d'éducation primaire du Burkina Faso (2015-2025), couvrant
+13 régions administratives sur 10 années scolaires.
+
+Objectif : identifier les régions à fort risque de décrochage scolaire et
+anticiper l'évolution du Taux d'Achèvement du Primaire (TAP) pour 2025-26.
+
+================================================================================
+1. STATISTIQUES DESCRIPTIVES NATIONALES
+================================================================================
+
+Évolution nationale (moyenne des 13 régions) :
+         TAP_moyen  TBS_moyen  TBA_moyen  TAUX_ABANDON_moyen  NB_ECOLES_total
+ANNEE                                                                        
+2015-16     57.777     85.692     99.554              42.223          13302.0
+2016-17     59.429     87.923    102.015              40.571          13900.0
+2017-18     62.492     90.220    104.231              37.508          14218.0
+2018-19     60.837     88.054     97.023              39.163          13735.0
+2019-20     59.944     86.346     94.877              40.056          13193.0
+2020-21     61.420     85.508     96.677              38.580          13352.0
+2021-22     61.436     85.554     95.262              38.564          12620.0
+2022-23     54.627     75.226     86.699              45.373          11187.0
+2023-24     53.914     78.458    101.236              46.086          11864.0
+2024-25     51.191     78.745    102.270              48.809              0.0
+
+Chiffre clé : La crise sécuritaire de 2022-23 a provoqué une chute de
+6.81 points de pourcentage du TAP national moyen.
+
+================================================================================
+2. CLASSEMENT DES RÉGIONS PAR RISQUE (2024-25)
+================================================================================
+
+           REGION  TAP_total  TAUX_ABANDON  INDICE_VULNERABILITE NIVEAU_RISQUE
+            SAHEL     11.144        88.856                 0.967         Élevé
+              EST     16.480        83.520                 0.866         Élevé
+BOUCLE DU MOUHOUN     37.186        62.814                 0.681         Élevé
+      CENTRE-NORD     27.662        72.338                 0.649        Modéré
+       CENTRE-EST     48.667        51.333                 0.508        Modéré
+         CASCADES     49.441        50.559                 0.506        Modéré
+             NORD     46.440        53.560                 0.481        Modéré
+        SUD-OUEST     53.550        46.450                 0.448        Modéré
+    HAUTS-BASSINS     68.768        31.232                 0.269        Faible
+  PLATEAU CENTRAL     67.221        32.779                 0.265        Faible
+       CENTRE-SUD     75.537        24.463                 0.226        Faible
+     CENTRE-OUEST     75.865        24.135                 0.183        Faible
+           CENTRE     87.518        12.482                 0.081        Faible
+
+Synthèse :
+  - Régions à risque ÉLEVÉ  : 3  (Sahel, Est, Boucle du Mouhoun)
+  - Régions à risque MODÉRÉ : 5
+  - Régions à risque FAIBLE : 5
+
+La région du SAHEL présente l'indice de vulnérabilité le plus critique (0.967),
+avec un TAP inférieur à 15% et un taux d'abandon dépassant 85%.
+
+================================================================================
+3. CLUSTERING K-MEANS (k=3) — PROFILS DE VULNÉRABILITÉ
+================================================================================
+
+Méthode : K-Means sur les variables TAP, TBS, TBA, TAUX_ABANDON
+normalisées (StandardScaler). 3 profils identifiés.
+
+           REGION                                           PROFIL
+BOUCLE DU MOUHOUN           Profil B — Vulnérabilité intermédiaire
+         CASCADES           Profil B — Vulnérabilité intermédiaire
+           CENTRE      Profil C — Vulnérabilité faible (TAP élevé)
+       CENTRE-EST           Profil B — Vulnérabilité intermédiaire
+      CENTRE-NORD Profil A — Vulnérabilité critique (TAP très bas)
+     CENTRE-OUEST      Profil C — Vulnérabilité faible (TAP élevé)
+       CENTRE-SUD      Profil C — Vulnérabilité faible (TAP élevé)
+              EST Profil A — Vulnérabilité critique (TAP très bas)
+    HAUTS-BASSINS      Profil C — Vulnérabilité faible (TAP élevé)
+             NORD           Profil B — Vulnérabilité intermédiaire
+  PLATEAU CENTRAL      Profil C — Vulnérabilité faible (TAP élevé)
+            SAHEL Profil A — Vulnérabilité critique (TAP très bas)
+        SUD-OUEST           Profil B — Vulnérabilité intermédiaire
+
+Centres des clusters :
+                                                  NB_REGIONS  TAP_moyen  TBA_moyen  ABANDON_moyen
+PROFIL                                                                                           
+Profil A — Vulnérabilité critique (TAP très bas)           3      18.43      59.12          81.57
+Profil B — Vulnérabilité intermédiaire                     5      47.06     111.95          52.94
+Profil C — Vulnérabilité faible (TAP élevé)                5      74.98     118.48          25.02
+
+Résultat : Le clustering confirme la séparation nette entre les régions
+sahéliennes/est (crise sécuritaire forte) et les régions du centre/sud-ouest.
+
+================================================================================
+4. MODÈLE DE RÉGRESSION — FACTEURS DU DÉCROCHAGE
+================================================================================
+
+Modèle : Régression linéaire multiple (scikit-learn)
+Variable cible : TAUX_ABANDON (%)
+Prédicteurs : TAP_total, TBS_total, IPS_TAP, NB_ECOLES
+
+Coefficients :
+ Variable  Coefficient                                 Interpretation
+TAP_total         -1.0       1pt TAP ↑ → abandon change de ce montant
+TBS_total         -0.0       1pt TBS ↑ → abandon change de ce montant
+  IPS_TAP          0.0   1pt IPS_TAP ↑ → abandon change de ce montant
+NB_ECOLES          0.0 1 école de plus → abandon change de ce montant
+
+Performance :
+  - R² = 1.0 → le modèle explique 100.0% de la variance du décrochage
+  - MAE = 0.0% → erreur de prédiction moyenne de 0.0 points de %
+
+Interprétation : Le TAP est le facteur dominant. Une baisse du TAP est
+systématiquement associée à une hausse du taux d'abandon.
+
+================================================================================
+5. PRÉVISIONS TAP 2025-26 PAR RÉGION
+================================================================================
+
+Méthode : Régression linéaire sur la tendance historique 2015-2025.
+Les prévisions sont à interpréter avec prudence (R² variable).
+
+           REGION  TAP_2024-25  TAP_prevu_2025-26  variation_attendue  R2_fiabilite     TENDANCE
+            SAHEL        11.14               4.32               -6.82         0.808  Dégradation
+              EST        16.48              13.93               -2.55         0.844  Dégradation
+      CENTRE-NORD        27.66              29.96                2.30         0.641 Amélioration
+BOUCLE DU MOUHOUN        37.19              34.11               -3.08         0.633  Dégradation
+             NORD        46.44              44.95               -1.49         0.782  Dégradation
+       CENTRE-EST        48.67              49.62                0.95         0.730 Amélioration
+         CASCADES        49.44              55.63                6.19         0.029 Amélioration
+        SUD-OUEST        53.55              57.92                4.37         0.130 Amélioration
+  PLATEAU CENTRAL        67.22              71.44                4.22         0.018 Amélioration
+    HAUTS-BASSINS        68.77              74.16                5.39         0.184 Amélioration
+       CENTRE-SUD        75.54              81.78                6.24         0.204 Amélioration
+     CENTRE-OUEST        75.86              85.29                9.43         0.364 Amélioration
+           CENTRE        87.52              96.85                9.33         0.790 Amélioration
+
+ALERTE : Les régions à TENDANCE = Dégradation nécessitent une intervention
+prioritaire des décideurs avant la rentrée 2025-26.
+
+================================================================================
+6. RECOMMANDATIONS POUR LES DÉCIDEURS
+================================================================================
+
+1. SAHEL, EST, BOUCLE DU MOUHOUN → Intervention URGENTE :
+   renforcement des programmes de cantines scolaires, sécurisation
+   des axes d'accès, déploiement d'enseignants volontaires.
+
+2. Toutes régions → Améliorer l'IPS (Indice de Parité des Sexes) :
+   les filles restent sous-représentées dans le TAP dans 9 régions.
+
+3. Surveiller les prévisions 2025-26 : 3 régions montrent une dégradation
+   attendue du TAP malgré la reprise post-crise de 2022-23.
+
+================================================================================
+OUTILS UTILISÉS
+================================================================================
+- Python 3.12 (pandas, scikit-learn, numpy)
+- Algorithme : LinearRegression, KMeans (scikit-learn)
+- Aucune donnée sensible envoyée à une IA externe pour cette étape
+- Usage de l'IA déclaré dans la documentation (Section 7)
+
+================================================================================
+« On ne développe pas, on se développe » — Joseph Ki-Zerbo
+================================================================================

@@ -1,0 +1,113 @@
+================================================================================
+INTERPRÉTATION ET VISUALISATION — EduGuard
+Équipe : EduData Faso | Défi 1 | Data Challenge Burkina 2026
+Rôle : Data Analyst
+« On ne développe pas, on se développe » — Joseph Ki-Zerbo
+================================================================================
+
+SOLUTION DÉPLOYÉE
+-----------------
+Tableau de bord interactif EduGuard — accessible en ligne :
+
+  🌐 Application Streamlit :
+     https://eduguard-burkina-ktngtxnuxk3loeamoyucyy.streamlit.app/
+
+  💻 Code source GitHub :
+     https://github.com/Dinekonat/eduguard-burkina
+
+================================================================================
+FONCTIONNALITÉS DU TABLEAU DE BORD
+================================================================================
+
+Le tableau de bord EduGuard permet à tout décideur (directeur régional,
+fonctionnaire du MENA) de :
+
+1. CARTE DES RISQUES PAR RÉGION
+   - Visualisation géographique de l'indice de vulnérabilité (Scattergeo)
+   - Code couleur : Rouge (Élevé) / Orange (Modéré) / Vert (Faible)
+   - 13 régions positionnées sur la carte du Burkina Faso
+
+2. INDICATEURS CLÉS (KPIs)
+   - TAP national moyen 2024-25
+   - Nombre de régions en alerte rouge
+   - Chute du TAP due à la crise sécuritaire 2022-23 : -6.81 points
+
+3. ÉVOLUTION TEMPORELLE (2015-2025)
+   - Courbes du TAP, TBS, TBA par région
+   - Mise en évidence visuelle du creux 2022-23
+
+4. CLASSEMENT INTERACTIF DES RÉGIONS
+   - Tableau trié par indice de vulnérabilité décroissant
+   - Filtres par niveau de risque (Élevé / Modéré / Faible)
+
+5. PRÉVISIONS 2025-26
+   - TAP prévu par région (régression linéaire)
+   - Alerte sur les régions en dégradation attendue :
+     SAHEL (-6.8 pts), EST (-2.6 pts), BOUCLE DU MOUHOUN (-3.1 pts), NORD (-1.5 pts)
+
+================================================================================
+RÉSULTATS PRINCIPAUX (synthèse pour le décideur)
+================================================================================
+
+RÉGIONS EN ALERTE ROUGE (risque élevé, intervention prioritaire) :
+  1. SAHEL          — Indice 0.967 — TAP 11.1% — Abandon estimé : 88.9%
+  2. EST            — Indice 0.866 — TAP 16.5% — Abandon estimé : 83.5%
+  3. BOUCLE DU MOUHOUN — Indice 0.681 — TAP 37.2% — Abandon estimé : 62.8%
+
+RÉGIONS EN ALERTE ORANGE (risque modéré, surveillance renforcée) :
+  4. CENTRE-NORD    — Indice 0.595 — TAP 27.7%
+  5. CENTRE-EST     — Indice 0.549 — TAP 48.7%
+  6. CASCADES       — Indice 0.508 — TAP 49.4%
+  7. NORD           — Indice 0.503 — TAP 46.4%
+  8. SUD-OUEST      — Indice 0.422 — TAP 53.5%
+
+RÉGIONS STABLES (risque faible) :
+  9. HAUTS-BASSINS  — TAP 68.8%
+  10. PLATEAU CENTRAL — TAP 67.2%
+  11. CENTRE-SUD    — TAP 75.5%
+  12. CENTRE-OUEST  — TAP 75.9%
+  13. CENTRE        — TAP 87.5%
+
+================================================================================
+RECOMMANDATIONS AUX DÉCIDEURS
+================================================================================
+
+URGENT — Sahel, Est, Boucle du Mouhoun :
+  → Renforcer les programmes de cantines scolaires et d'allocations
+  → Sécuriser les axes d'accès aux écoles (zone d'insécurité)
+  → Déployer des enseignants volontaires et des classes mobiles
+
+MOYEN TERME — Toutes les régions :
+  → Améliorer la parité filles-garçons (IPS < 1 dans 9 régions)
+  → Prévoir l'augmentation du TAP avant la rentrée 2025-26
+  → Installer des indicateurs de suivi en temps réel (DGESS)
+
+================================================================================
+LIMITES DE LA SOLUTION
+================================================================================
+
+- Les données s'arrêtent à 2024-25. Pas de données temps réel.
+- TAUX_ABANDON est une approximation (100 - TAP), pas un comptage direct.
+- Les prévisions 2025-26 sont basées sur une tendance linéaire (R² variable).
+- Le dataset couvre le primaire uniquement (pas le secondaire ou préscolaire
+  pour les prévisions).
+
+================================================================================
+REPRODUCTION — Comment relancer le travail
+================================================================================
+
+Prérequis : Python 3.10+, pip install -r requirements.txt
+
+Ordre d'exécution :
+  1. python nettoyage_complet.py      → génère 02_nettoyage/
+  2. python etape3_transformation.py  → génère 03_transformation/
+  3. python etape4_analyse.py         → génère 04_analyse/
+  4. streamlit run eduguard_app.py    → lance le tableau de bord en local
+
+Ou directement : https://eduguard-burkina-ktngtxnuxk3loeamoyucyy.streamlit.app/
+
+================================================================================
+Produit le : 18 novembre 2026
+Équipe     : EduData Faso
+Défi       : Défi 1 — Cartographie et anticipation du risque de décrochage
+================================================================================

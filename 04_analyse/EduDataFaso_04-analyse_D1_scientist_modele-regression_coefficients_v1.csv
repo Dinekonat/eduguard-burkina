@@ -1,0 +1,5 @@
+﻿Variable,Coefficient,Interpretation
+TAP_total,-1.0,1pt TAP ↑ → abandon change de ce montant
+TBS_total,-0.0,1pt TBS ↑ → abandon change de ce montant
+IPS_TAP,0.0,1pt IPS_TAP ↑ → abandon change de ce montant
+NB_ECOLES,0.0,1 école de plus → abandon change de ce montant
