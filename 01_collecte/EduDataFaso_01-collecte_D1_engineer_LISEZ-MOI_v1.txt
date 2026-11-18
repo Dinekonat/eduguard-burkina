@@ -1,0 +1,93 @@
+LISEZ-MOI - Etape 1 : Collecte des donnees brutes
+Equipe     : EduData Faso
+Defi       : Defi 1 - Cartographie et anticipation du risque de decrochage scolaire
+Date       : 15 novembre 2026
+Version    : v1
+
+=== SOURCE PRINCIPALE ===
+Fichier    : DONNEES_STATISTQUES_PRESCOLAIRE ET PRIMAIRE_2016_2025_DCB.xlsx
+Producteur : DGESS - Direction Generale des Etudes et des Statistiques Sectorielles
+             Ministere de l'Education Nationale du Burkina Faso
+Periode    : Annees scolaires 2015/2016 a 2024/2025 (10 annees)
+Couverture : 13 regions du Burkina Faso
+Acces      : Fourni dans l'espace challenge (equation.africadataentry.com)
+
+=== FICHIERS EXPORTES ET LEUR CONTENU ===
+
+[PRIORITE CRITIQUE - Variables de decrochage]
+1. EduDataFaso_01-collecte_D1_engineer_effectifs-primaire-par-region_v1.csv
+   Source : Feuil1 | Effectifs totaux du primaire par region et sexe (GARCONS/FILLES/TOTAL)
+   Usage Defi1 : Volume d'eleves par region - base pour detecter les variations
+
+2. EduDataFaso_01-collecte_D1_engineer_nouveaux-inscrits-cp1_v1.csv
+   Source : Feuil5 | Nouveaux inscrits en CP1 (entree en primaire) par region et sexe
+   Usage Defi1 : Point de depart de la cohorte - combien entrent en 1ere annee
+
+3. EduDataFaso_01-collecte_D1_engineer_tap-primaire-par-region_v1.csv
+   Source : Feuil8 | Taux d'Achevement au Primaire (TAP) par region, sexe et annee
+   Usage Defi1 : VARIABLE CIBLE PRINCIPALE - mesure directe du decrochage
+   Format colonnes : ANNEE_SEXE (ex: 2015-16_G, 2015-16_F, 2015-16_T)
+
+[PRIORITE IMPORTANTE - Indicateurs d'acces]
+4. EduDataFaso_01-collecte_D1_engineer_tba-primaire-par-region_v1.csv
+   Source : Feuil6 | Taux Brut d'Admission (TBA) par region et sexe
+   Usage Defi1 : Mesure l'acces a l'entree - complement du TAP
+
+5. EduDataFaso_01-collecte_D1_engineer_tbs-primaire-par-region_v1.csv
+   Source : Feuil7 | Taux Brut de Scolarisation (TBS) par region et sexe
+   Usage Defi1 : Mesure la couverture scolaire globale par region
+
+6. EduDataFaso_01-collecte_D1_engineer_taux-reussite-cep_v1.csv
+   Source : Feuil9 | Taux de reussite au CEP (2016-2025) par region et sexe
+   Usage Defi1 : Resultat final du primaire - complement du TAP
+
+7. EduDataFaso_01-collecte_D1_engineer_nombre-ecoles_v1.csv
+   Source : Feuil13 | Nombre d'ecoles primaires (Public/Prive/Total) par region
+   Usage Defi1 : Infrastructure scolaire - facteur potentiel de decrochage
+
+[PRIORITE CONTEXTUELLE - Facteurs explicatifs]
+8. EduDataFaso_01-collecte_D1_engineer_effectifs-primaire-par-statut_v1.csv
+   Source : Feuil2 | Effectifs par statut de l'ecole (Public/Prive) et sexe
+   Usage Defi1 : Contexte - acces Public vs Prive peut influencer le decrochage
+
+9. EduDataFaso_01-collecte_D1_engineer_effectifs-primaire-par-milieu_v1.csv
+   Source : Feuil3 | Effectifs par milieu (Urbain/Rural) et sexe
+   Usage Defi1 : Facteur cle - l'eloignement rural est un facteur de decrochage
+
+10. EduDataFaso_01-collecte_D1_engineer_effectifs-primaire-par-niveau_v1.csv
+    Source : Feuil4 | Effectifs par niveau (CP1 a CM2), statut et sexe
+    Usage Defi1 : Suivi de cohorte - voir ou se produisent les abandons par niveau
+
+11. EduDataFaso_01-collecte_D1_engineer_ips-tba_v1.csv
+    Source : Feuil10 | IPS (Indice de Parite des Sexes) du TBA par region
+    Usage Defi1 : Parite comme facteur - inegalite fille/garcon peut expliquer decrochage
+
+12. EduDataFaso_01-collecte_D1_engineer_ips-tbs_v1.csv
+    Source : Feuil11 | IPS du TBS par region
+    Usage Defi1 : Contexte de parite dans la scolarisation
+
+13. EduDataFaso_01-collecte_D1_engineer_ips-tap_v1.csv
+    Source : Feuil12 | IPS du TAP par region
+    Usage Defi1 : Parite dans l'achevement - qui decroche plus : filles ou garcons ?
+
+[CONTEXTE AMONT]
+14. EduDataFaso_01-collecte_D1_engineer_effectifs-prescolaire_v1.csv
+    Source : PRESCOLAIRE | Effectifs du prescolaire par region et sexe (2016-2025)
+    Usage Defi1 : Contexte amont - la pre-scolarisation influence l'achevement du primaire
+    Format colonnes : ANNEE_SEXE (ex: 2016_G, 2016_F, 2016_T)
+
+=== NOTES IMPORTANTES ===
+- Toutes les donnees sont agregees au niveau regional (13 regions)
+- Annee scolaire 2022/2023 : forte baisse des effectifs visible (crise securitaire probable)
+- Les 13 regions correspondent aux ANCIENNES regions (avant redecoupage en 17)
+- Annee scolaire ≠ annee civile : 2015/2016 est note "2016" dans certaines colonnes
+- Certains fichiers contiennent encore des lignes NaN et totaux (a traiter en etape 2)
+- Source citee : DGESS / Ministere de l'Education nationale du Burkina Faso, 2016-2025
+
+=== PROCHAINE ETAPE ===
+Etape 2 : Nettoyage des donnees (02_nettoyage)
+- Harmoniser les noms de regions
+- Supprimer les lignes de totaux et les NaN parasites
+- Verifier la coherence Garcons + Filles = Total
+- Traiter les valeurs manquantes
+- Creer un journal de nettoyage

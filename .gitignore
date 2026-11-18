@@ -1,0 +1,16 @@
+# Fichiers à ne pas mettre sur GitHub
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.log
+.streamlit/secrets.toml
+
+# Fichiers de données brutes (trop lourds ou sensibles)
+# Les CSV nettoyés sont inclus car nécessaires au dashboard
+
+# Fichiers temporaires
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store

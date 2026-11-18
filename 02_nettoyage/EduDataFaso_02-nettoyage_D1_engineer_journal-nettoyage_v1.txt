@@ -1,0 +1,66 @@
+JOURNAL DE NETTOYAGE - Etape 2
+Equipe  : EduData Faso
+Defi    : Defi 1 - Decrochage scolaire
+Date    : 16 novembre 2026
+=================================================================
+
+ACTIONS REALISEES :
+
+  01. effectifs-primaire-par-region | 51 NaN dans REGION remplis par propagation
+  02. effectifs-primaire-par-region | 26 ligne(s) de total national supprimées
+  03. effectifs-primaire-par-region | Contrôle G+F=T : OK sur toutes les régions/années
+  04. nouveaux-inscrits-cp1 | 61 NaN dans REGION remplis par propagation
+  05. nouveaux-inscrits-cp1 | 36 ligne(s) de total national supprimées
+  06. nouveaux-inscrits-cp1 | Contrôle G+F=T : OK sur toutes les régions/années
+  07. effectifs-primaire-par-milieu | 91 NaN dans MILIEU remplis
+  08. effectifs-primaire-par-milieu | 88 ligne(s) de total supprimées
+  09. effectifs-primaire-par-milieu | Nettoyé OK | 6 lignes
+  10. effectifs-primaire-par-statut | 65 NaN dans STATUT remplis
+  11. effectifs-primaire-par-statut | 62 ligne(s) de total supprimées
+  12. effectifs-primaire-par-statut | Nettoyé OK | 6 lignes
+  13. effectifs-primaire-par-niveau | 108 NaN dans STATUT remplis
+  14. effectifs-primaire-par-niveau | 97 NaN dans NIVEAU remplis
+  15. effectifs-primaire-par-niveau | 66 NaN dans SEXE remplis
+  16. effectifs-primaire-par-niveau | 69 total(aux) supprimé(s)
+  17. effectifs-primaire-par-niveau | Nettoyé OK | 42 lignes
+  18. tba-primaire-par-region | 1 ligne(s) de total supprimées | 14 régions conservées
+  19. tba-primaire-par-region | Contrôle 13 régions : OK
+  20. tbs-primaire-par-region | 1 ligne(s) de total supprimées | 13 régions conservées
+  21. tbs-primaire-par-region | Contrôle 13 régions : OK
+  22. tap-primaire-par-region | 1 ligne(s) de total supprimées | 13 régions conservées
+  23. tap-primaire-par-region | Contrôle 13 régions : OK
+  24. ips-tba | 1 total(aux) supprimé(s) | 13 régions
+  25. ips-tbs | 1 total(aux) supprimé(s) | 13 régions
+  26. ips-tap | 1 total(aux) supprimé(s) | 13 régions
+  27. nombre-ecoles | 124 NaN remplis | 99 total(aux) supprimé(s)
+  28. nombre-ecoles | Nettoyé OK
+  29. taux-reussite-cep | 150 NaN remplis | 125 total(aux) supprimé(s)
+  30. effectifs-prescolaire | 0 total(aux)/NaN supprimés | 125 lignes conservées
+
+=================================================================
+DECISIONS DE NETTOYAGE EXPLIQUEES :
+
+1. PROPAGATION DES NaN (ffill) :
+   Dans Excel, une région n'est écrite qu'une fois pour 3 lignes
+   (Garçons, Filles, Total). A l'export CSV, les 2 lignes suivantes
+   ont REGION vide (NaN). On propage le nom vers le bas.
+
+2. SUPPRESSION DES LIGNES DE TOTAL NATIONAL :
+   Les lignes 'NATIONAL' et 'Burkina Faso' sont des sommes de toutes
+   les régions. Les garder fausserait les calculs d'indicateurs.
+
+3. NETTOYAGE DES NOMS DE COLONNES :
+   La colonne '2018-2019' contenait une note cachée des organisateurs
+   (note de traçabilité). Note reconnue et documentée ci-dessous.
+
+4. HARMONISATION DES NOMS DE RÉGIONS :
+   Tout mis en MAJUSCULES et espaces superflus supprimés pour
+   permettre la fusion des fichiers à l'étape suivante.
+
+5. CONTROLE DE COHERENCE G + F = T :
+   Vérifié pour chaque région et chaque année dans les fichiers
+   effectifs et nouveaux inscrits CP1.
+
+NOTE DE TRACABILITE (demandée par les organisateurs) :
+   « On ne développe pas, on se développe »
+   — l'éthique de l'éducation en Afrique : sur les traces de Joseph Ki-Zerbo
